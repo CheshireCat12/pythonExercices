@@ -1,6 +1,7 @@
 from itertools import count
 from random import random
 from collections import Counter
+#la probabilité de tombé sur un carte (Légendaire, Epique, Rare, Commune)
 testCartes = {0.01:"L",0.05:"E",0.28:"R",1.0:"C"}
 
 finalResult = []
