@@ -1,37 +1,77 @@
 from pathlib import Path
+from turtle import shape, forward, left, right, speed, exitonclick,position
 
+shape("turtle")
+left(90)
 pathCarte = Path("map.txt")
-
+print(position())
 with pathCarte.open("r") as f:
     carte = [str(i).strip() for i in f]
 
-#print(carte)
 carte = [ carte.strip() for carte in carte[0].split(",")]
-#print(carte)
 
-def resetMemory(memory, letter):
-    if memory.count(letter) >=4:
-        memory = [ i for i in memory if i != letter]
-    return memory
+def drawTurtle(direction,length):
+    if direction == "R":
+        right(90)
+    elif direction == "L":
+        left(90)
+    forward(length)
 
-count = 0
+speed(0)
 
-memory = []
+memories = []
+twice = []
+test = True
+axePos = {"X":0,"Y":0}
+axe = "X"
+lastAxe = "+"
 for i in range(len(carte)):
     tempNow = list(carte[i])
-    #print(tempNow)
-    memory.append(tempNow[0])
-    print(memory)
-    if(memory.count("R") >= 3 or memory.count("L") >= 3):
-        count -= int("".join(tempNow[1:]))
-        print("c'est la merde {0}".format(int("".join(tempNow[1:]))))
+    if axe == "X":
+        if lastAxe == "+":
+            if tempNow[0] == "R":
+                axePos[axe] += int("".join(tempNow[1:]))
+                lastAxe = "+"
+            else:
+                axePos[axe] -= int("".join(tempNow[1:]))
+                lastAxe = "-"
+        else:
+            if tempNow[0] == "R":
+                axePos[axe] -= int("".join(tempNow[1:]))
+                lastAxe = "-"
+            else:
+                axePos[axe] += int("".join(tempNow[1:]))
+                lastAxe = "+"
+        axe = "Y"
     else:
-        count += int("".join(tempNow[1:]))
+        if lastAxe == "+":
+            if tempNow[0] == "R":
+                axePos[axe] -= int("".join(tempNow[1:]))
+                lastAxe = "-"
+            else:
+                axePos[axe] += int("".join(tempNow[1:]))
+                lastAxe = "+"
+        else:
+            if tempNow[0] == "R":
+                axePos[axe] += int("".join(tempNow[1:]))
+                lastAxe = "+"
+            else:
+                axePos[axe] -= int("".join(tempNow[1:]))
+                lastAxe = "-"
+        axe = "X"
+
+    drawTurtle(tempNow[0],int("".join(tempNow[1:])))
+    newPos = position()
+    if newPos in memories and test:
+        twice = newPos
+        test = False
+    memories.append(newPos)
 
 
-    memory = resetMemory(memory, "R")
-    memory = resetMemory(memory, "L")
+posx, posy = position()
 
+print(axePos)
+print(twice)
 
-
-print(count)
+print(posx+posy)
+exitonclick()
